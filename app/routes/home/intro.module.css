@@ -7,21 +7,26 @@
 }
 
 .text {
-  max-width: 1024px;
+  max-width: 1080px;
   width: 100%;
   position: relative;
   top: calc(var(--spaceL) * -1);
 
   @media (--mediaDesktop) {
-    max-width: 920px;
+    max-width: 980px;
   }
 
   @media (--mediaLaptop) {
-    max-width: 780px;
+    max-width: 860px;
+  }
+
+  @media (--mediaTablet) {
+    max-width: 100%;
   }
 
   @media (--mediaMobile) {
     top: calc(var(--space3XL) * -1);
+    max-width: 100%;
   }
 
   @media (--mediaMobileS) {
@@ -96,6 +101,26 @@
 
 .title {
   letter-spacing: -0.03em;
+  font-size: clamp(2.5rem, 4.4vw, 4.25rem);
+  line-height: 1.15;
+  width: 100%;
+  max-width: 100%;
+
+  @media (--mediaLaptop) {
+    font-size: clamp(2.25rem, 3.8vw, 3.5rem);
+  }
+
+  @media (--mediaTablet) {
+    font-size: clamp(1.85rem, 4.5vw, 2.75rem);
+  }
+
+  @media (--mediaMobile) {
+    font-size: clamp(1.5rem, 6.5vw, 2.15rem);
+  }
+
+  @media (--mediaMobileS) {
+    font-size: clamp(1.3rem, 6.2vw, 1.75rem);
+  }
 }
 
 .row {
@@ -103,9 +128,16 @@
   flex-direction: row;
   align-items: center;
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  flex-wrap: nowrap;
 
   &[data-hidden='true'] {
     opacity: 0;
+  }
+
+  @media (--mediaTablet) {
+    flex-wrap: wrap;
   }
 }
 
@@ -129,10 +161,10 @@
 
 .word {
   position: relative;
-  display: flex;
+  display: inline-flex;
   flex-shrink: 0;
   align-items: center;
-  line-height: 1;
+  line-height: 1.15;
   animation-duration: 1.5s;
   animation-delay: var(--delay);
   animation-fill-mode: forwards;
@@ -140,6 +172,13 @@
   color: color-mix(in lab, var(--text) 0%, transparent);
   transition: opacity 0.5s ease var(--durationM);
   isolation: isolate;
+  white-space: nowrap;
+
+  @media (--mediaTablet) {
+    white-space: normal;
+    flex-shrink: 1;
+    word-break: break-word;
+  }
 
   &::after {
     content: '';
@@ -158,8 +197,9 @@
 
   &[data-plus='true']::before {
     content: '+';
-    margin-right: 10px;
+    margin-right: 0.22em;
     opacity: 0.4;
+    display: inline-block;
   }
 
   &[data-status='entering'] {
@@ -207,9 +247,11 @@
   content: '';
   height: 2px;
   background: color-mix(in lab, var(--text) 30%, transparent);
-  width: 120%;
+  flex: 1 1 0;
+  max-width: 140px;
+  min-width: 24px;
   display: flex;
-  margin-left: 20px;
+  margin-left: 24px;
   animation-duration: 0.8s;
   animation-delay: 1s;
   animation-fill-mode: forwards;
@@ -218,6 +260,10 @@
   opacity: 0;
   position: relative;
   top: 0.05em;
+
+  @media (--mediaTablet) {
+    display: none;
+  }
 
   &[data-status='entering'] {
     &:global {
