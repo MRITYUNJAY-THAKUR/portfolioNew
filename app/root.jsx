@@ -9,7 +9,7 @@ import {
   useNavigation,
   useRouteError,
 } from '@remix-run/react';
-import { createCookieSessionStorage, json } from '@remix-run/cloudflare';
+import { createCookieSessionStorage, json } from '@remix-run/node';
 import { ThemeProvider, themeStyles } from '~/components/theme-provider';
 import GothamBook from '~/assets/fonts/gotham-book.woff2';
 import GothamMedium from '~/assets/fonts/gotham-medium.woff2';
@@ -53,6 +53,11 @@ export const loader = async ({ request, context }) => {
   const pathnameSliced = pathname.endsWith('/') ? pathname.slice(0, -1) : url;
   const canonicalUrl = `${config.url}${pathnameSliced}`;
 
+  const sessionSecret =
+    process?.env?.SESSION_SECRET ||
+    context?.cloudflare?.env?.SESSION_SECRET ||
+    'portfolio-session-secret-key-2026';
+
   const { getSession, commitSession } = createCookieSessionStorage({
     cookie: {
       name: '__session',
@@ -60,8 +65,8 @@ export const loader = async ({ request, context }) => {
       maxAge: 604_800,
       path: '/',
       sameSite: 'lax',
-      secrets: [context.cloudflare.env.SESSION_SECRET || ' '],
-      secure: true,
+      secrets: [sessionSecret],
+      secure: process?.env?.NODE_ENV === 'production',
     },
   });
 

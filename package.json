@@ -21,7 +21,9 @@
     "@mdx-js/react": "^3.0.1",
     "@remix-run/cloudflare": "^2.7.1",
     "@remix-run/cloudflare-pages": "^2.7.1",
+    "@remix-run/node": "^2.17.5",
     "@remix-run/react": "^2.7.1",
+    "@vercel/remix": "^2.16.7",
     "framer-motion": "11.0.5",
     "isbot": "^4.1.0",
     "miniflare": "^3.20231030.4",
@@ -64,6 +66,6 @@
     "wrangler": "^3.24.0"
   },
   "engines": {
-    "node": ">=19.9.0"
+    "node": ">=18.0.0"
   }
 }

@@ -10,6 +10,7 @@ export function useInViewport(
   const [isUnobserved, setIsUnobserved] = useState(false);
 
   useEffect(() => {
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return;
     if (!elementRef?.current) return;
 
     const observer = new IntersectionObserver(([entry]) => {

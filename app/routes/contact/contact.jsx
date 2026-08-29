@@ -14,7 +14,7 @@ import { useRef } from 'react';
 import { cssProps, msToNum, numToMs } from '~/utils/style';
 import { baseMeta } from '~/utils/meta';
 import { Form, useActionData, useNavigation } from '@remix-run/react';
-import { json } from '@remix-run/cloudflare';
+import { json } from '@remix-run/node';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
 import { Link } from '~/components/link';
 import config from '~/config.json';
@@ -60,25 +60,25 @@ export async function action({ context, request }) {
     return json({ errors });
   }
 
-  if (
-    context?.cloudflare?.env?.AWS_ACCESS_KEY_ID &&
-    context?.cloudflare?.env?.AWS_SECRET_ACCESS_KEY &&
-    context?.cloudflare?.env?.EMAIL &&
-    context?.cloudflare?.env?.FROM_EMAIL
-  ) {
+  const awsAccessKey = process?.env?.AWS_ACCESS_KEY_ID || context?.cloudflare?.env?.AWS_ACCESS_KEY_ID;
+  const awsSecretKey = process?.env?.AWS_SECRET_ACCESS_KEY || context?.cloudflare?.env?.AWS_SECRET_ACCESS_KEY;
+  const targetEmail = process?.env?.EMAIL || context?.cloudflare?.env?.EMAIL;
+  const fromEmail = process?.env?.FROM_EMAIL || context?.cloudflare?.env?.FROM_EMAIL;
+
+  if (awsAccessKey && awsSecretKey && targetEmail && fromEmail) {
     try {
       const ses = new SESClient({
         region: 'us-east-1',
         credentials: {
-          accessKeyId: context.cloudflare.env.AWS_ACCESS_KEY_ID,
-          secretAccessKey: context.cloudflare.env.AWS_SECRET_ACCESS_KEY,
+          accessKeyId: awsAccessKey,
+          secretAccessKey: awsSecretKey,
         },
       });
 
       await ses.send(
         new SendEmailCommand({
           Destination: {
-            ToAddresses: [context.cloudflare.env.EMAIL],
+            ToAddresses: [targetEmail],
           },
           Message: {
             Body: {
@@ -90,7 +90,7 @@ export async function action({ context, request }) {
               Data: `Portfolio message from ${email}`,
             },
           },
-          Source: `Portfolio <${context.cloudflare.env.FROM_EMAIL}>`,
+          Source: `Portfolio <${fromEmail}>`,
           ReplyToAddresses: [email],
         })
       );

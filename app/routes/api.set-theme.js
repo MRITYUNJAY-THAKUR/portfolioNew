@@ -1,8 +1,13 @@
-import { json, createCookieSessionStorage } from '@remix-run/cloudflare';
+import { json, createCookieSessionStorage } from '@remix-run/node';
 
 export async function action({ request, context }) {
   const formData = await request.formData();
   const theme = formData.get('theme');
+
+  const sessionSecret =
+    process?.env?.SESSION_SECRET ||
+    context?.cloudflare?.env?.SESSION_SECRET ||
+    'portfolio-session-secret-key-2026';
 
   const { getSession, commitSession } = createCookieSessionStorage({
     cookie: {
@@ -11,8 +16,8 @@ export async function action({ request, context }) {
       maxAge: 604_800,
       path: '/',
       sameSite: 'lax',
-      secrets: [context.cloudflare.env.SESSION_SECRET || ' '],
-      secure: true,
+      secrets: [sessionSecret],
+      secure: process?.env?.NODE_ENV === 'production',
     },
   });
 
