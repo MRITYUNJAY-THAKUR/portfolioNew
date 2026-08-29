@@ -33,6 +33,29 @@
   }
 }
 
+.actions {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spaceM);
+  margin-top: var(--space2XL);
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity var(--durationL) var(--bezierFastoutSlowin) 0.6s,
+    transform var(--durationL) var(--bezierFastoutSlowin) 0.6s;
+
+  &[data-visible='true'] {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (--mediaMobile) {
+    flex-direction: column;
+    width: 100%;
+    margin-top: var(--spaceXL);
+    gap: var(--spaceS);
+  }
+}
+
 .name {
   text-transform: uppercase;
   font-size: calc((24 / 16) * 1rem);

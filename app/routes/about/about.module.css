@@ -1,0 +1,115 @@
+.about {
+  --maxWidthL: 1000px;
+}
+
+.section {
+  padding-top: var(--space2XL);
+  padding-bottom: var(--space2XL);
+  margin-top: var(--space2XL);
+
+  + & {
+    margin-top: 0;
+  }
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: var(--space4XL);
+  align-items: center;
+
+  @media (--mediaTablet) {
+    grid-template-columns: 100%;
+    gap: var(--space2XL);
+  }
+}
+
+.imagesText {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spaceL);
+}
+
+.sidebarImage {
+  width: 100%;
+  max-width: 380px;
+  transition: transform var(--durationL) var(--bezierFastoutSlowin);
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.focusGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spaceL);
+  margin-top: var(--spaceL);
+
+  @media (--mediaMobile) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.focusCard {
+  padding: var(--spaceL);
+  background: color-mix(in oklch, var(--backgroundLight) 80%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: var(--borderRadiusM);
+  transition: transform var(--durationM) var(--bezierFastoutSlowin),
+              border-color var(--durationM) ease,
+              box-shadow var(--durationM) ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+    box-shadow: 0 12px 24px -10px color-mix(in lab, var(--primary) 20%, transparent);
+  }
+}
+
+.focusTitle {
+  font-size: var(--fontSizeBodyM);
+  font-weight: var(--fontWeightBold);
+  color: var(--primary);
+  margin-bottom: var(--spaceXS);
+}
+
+.focusText {
+  font-size: var(--fontSizeBodyS);
+  color: var(--textBody);
+  line-height: var(--lineHeightBody);
+}
+
+.trainingCard {
+  padding: var(--spaceXL);
+  background: color-mix(in oklch, var(--backgroundLight) 80%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: var(--borderRadiusM);
+  transition: border-color var(--durationM) ease;
+
+  &:hover {
+    border-color: var(--primary);
+  }
+}
+
+.highlightBadge {
+  display: inline-block;
+  padding: var(--spaceXS) var(--spaceM);
+  background: color-mix(in oklch, var(--primary) 12%, transparent);
+  border: 1px solid var(--primary);
+  border-radius: var(--borderRadiusS);
+  color: var(--primary);
+  font-weight: var(--fontWeightBold);
+  margin-right: var(--spaceS);
+}
+
+.ctaActions {
+  display: flex;
+  gap: var(--spaceM);
+  flex-wrap: wrap;
+  margin-top: var(--spaceL);
+}

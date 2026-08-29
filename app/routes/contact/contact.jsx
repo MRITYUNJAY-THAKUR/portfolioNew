@@ -16,13 +16,14 @@ import { baseMeta } from '~/utils/meta';
 import { Form, useActionData, useNavigation } from '@remix-run/react';
 import { json } from '@remix-run/cloudflare';
 import { SESClient, SendEmailCommand } from '@aws-sdk/client-ses';
+import { Link } from '~/components/link';
+import config from '~/config.json';
 import styles from './contact.module.css';
 
 export const meta = () => {
   return baseMeta({
-    title: 'Contact',
-    description:
-      'Send me a message if you’re interested in discussing a project or if you just want to say hi',
+    title: 'Contact | Mrityunjay Thakur',
+    description: `Connect with ${config.name} for software development, technical inquiries, or collaborative discussions.`,
   });
 };
 
@@ -31,24 +32,14 @@ const MAX_MESSAGE_LENGTH = 4096;
 const EMAIL_PATTERN = /(.+)@(.+){2,}\.(.+){2,}/;
 
 export async function action({ context, request }) {
-  const ses = new SESClient({
-    region: 'us-east-1',
-    credentials: {
-      accessKeyId: context.cloudflare.env.AWS_ACCESS_KEY_ID,
-      secretAccessKey: context.cloudflare.env.AWS_SECRET_ACCESS_KEY,
-    },
-  });
-
   const formData = await request.formData();
   const isBot = String(formData.get('name'));
   const email = String(formData.get('email'));
   const message = String(formData.get('message'));
   const errors = {};
 
-  // Return without sending if a bot trips the honeypot
   if (isBot) return json({ success: true });
 
-  // Handle input validation on the server
   if (!email || !EMAIL_PATTERN.test(email)) {
     errors.email = 'Please enter a valid email address.';
   }
@@ -69,29 +60,55 @@ export async function action({ context, request }) {
     return json({ errors });
   }
 
-  // Send email via Amazon SES
-  await ses.send(
-    new SendEmailCommand({
-      Destination: {
-        ToAddresses: [context.cloudflare.env.EMAIL],
-      },
-      Message: {
-        Body: {
-          Text: {
-            Data: `From: ${email}\n\n${message}`,
+  if (
+    context?.cloudflare?.env?.AWS_ACCESS_KEY_ID &&
+    context?.cloudflare?.env?.AWS_SECRET_ACCESS_KEY &&
+    context?.cloudflare?.env?.EMAIL &&
+    context?.cloudflare?.env?.FROM_EMAIL
+  ) {
+    try {
+      const ses = new SESClient({
+        region: 'us-east-1',
+        credentials: {
+          accessKeyId: context.cloudflare.env.AWS_ACCESS_KEY_ID,
+          secretAccessKey: context.cloudflare.env.AWS_SECRET_ACCESS_KEY,
+        },
+      });
+
+      await ses.send(
+        new SendEmailCommand({
+          Destination: {
+            ToAddresses: [context.cloudflare.env.EMAIL],
           },
-        },
-        Subject: {
-          Data: `Portfolio message from ${email}`,
-        },
-      },
-      Source: `Portfolio <${context.cloudflare.env.FROM_EMAIL}>`,
-      ReplyToAddresses: [email],
-    })
-  );
+          Message: {
+            Body: {
+              Text: {
+                Data: `From: ${email}\n\n${message}`,
+              },
+            },
+            Subject: {
+              Data: `Portfolio message from ${email}`,
+            },
+          },
+          Source: `Portfolio <${context.cloudflare.env.FROM_EMAIL}>`,
+          ReplyToAddresses: [email],
+        })
+      );
+    } catch (err) {
+      console.error('SES Send Error:', err);
+    }
+  }
 
   return json({ success: true });
 }
+
+const interests = [
+  'Programming & Algorithm Design',
+  'Software Development & Web Systems',
+  'Problem Solving & DSA Optimization',
+  'Artificial Intelligence & Small Language Models',
+  'Continuous Learning & Engineering Projects',
+];
 
 export const Contact = () => {
   const errorRef = useRef();
@@ -112,6 +129,7 @@ export const Contact = () => {
             method="post"
             ref={nodeRef}
           >
+            {/* 1. Introduction with DecoderText & delayed slide */}
             <Heading
               className={styles.title}
               data-status={status}
@@ -119,14 +137,29 @@ export const Contact = () => {
               as="h1"
               style={getDelay(tokens.base.durationXS, initDelay, 0.3)}
             >
-              <DecoderText text="Say hello" start={status !== 'exited'} delay={300} />
+              <DecoderText text="Let's connect" start={status !== 'exited'} delay={300} />
             </Heading>
+            <Text
+              size="l"
+              style={{
+                color: 'var(--textBody)',
+                marginBottom: 'var(--spaceXL)',
+                lineHeight: '1.6',
+                opacity: status === 'entered' ? 1 : 0,
+                transform: status === 'entered' ? 'none' : 'translate3d(0, 16px, 0)',
+                transition: `opacity 0.8s var(--bezierFastoutSlowin) 350ms, transform 0.8s var(--bezierFastoutSlowin) 350ms`,
+              }}
+            >
+              I am always open to discussing software projects, algorithmic problem solving, AI exploration, or
+              collaborative initiatives. Drop a note below or reach out directly.
+            </Text>
             <Divider
               className={styles.divider}
               data-status={status}
               style={getDelay(tokens.base.durationXS, initDelay, 0.4)}
             />
-            {/* Hidden honeypot field to identify bots */}
+
+            {/* 2. Interactive Contact Form with floating label transitions */}
             <Input
               className={styles.botkiller}
               label="Name"
@@ -162,10 +195,10 @@ export const Contact = () => {
               in={!sending && actionData?.errors}
               timeout={msToNum(tokens.base.durationM)}
             >
-              {({ status: errorStatus, nodeRef }) => (
+              {({ status: errorStatus, nodeRef: errNodeRef }) => (
                 <div
                   className={styles.formError}
-                  ref={nodeRef}
+                  ref={errNodeRef}
                   data-status={errorStatus}
                   style={cssProps({
                     height: errorStatus ? errorRef.current?.offsetHeight : 0,
@@ -194,9 +227,87 @@ export const Contact = () => {
             >
               Send message
             </Button>
+
+            {/* 3. Direct Contact Channels with staggered entry */}
+            <div
+              style={{
+                marginTop: 'var(--space3XL)',
+                paddingTop: 'var(--spaceXL)',
+                borderTop: '1px solid var(--border)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'var(--spaceS)',
+                opacity: status === 'entered' ? 1 : 0,
+                transform: status === 'entered' ? 'none' : 'translate3d(0, 16px, 0)',
+                transition: `opacity 0.8s var(--bezierFastoutSlowin) 500ms, transform 0.8s var(--bezierFastoutSlowin) 500ms`,
+              }}
+            >
+              <Text size="s" style={{ color: 'var(--textTitle)', fontWeight: 'var(--fontWeightBold)' }}>
+                Direct Connection Channels:
+              </Text>
+              <div style={{ display: 'flex', gap: 'var(--spaceL)', flexWrap: 'wrap', marginTop: 'var(--spaceXS)' }}>
+                <Link href={`mailto:${config.email}`} style={{ fontSize: 'var(--fontSizeBodyS)' }}>
+                  {config.email}
+                </Link>
+                <Link
+                  href={`https://www.linkedin.com/in/${config.linkedin}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: 'var(--fontSizeBodyS)' }}
+                >
+                  LinkedIn
+                </Link>
+                <Link
+                  href={`https://github.com/${config.github}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: 'var(--fontSizeBodyS)' }}
+                >
+                  GitHub
+                </Link>
+              </div>
+            </div>
+
+            {/* 4. What I Am Interested In with smooth reveal */}
+            <div
+              style={{
+                marginTop: 'var(--space2XL)',
+                padding: 'var(--spaceL)',
+                background: 'var(--backgroundLight)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--borderRadiusM)',
+                opacity: status === 'entered' ? 1 : 0,
+                transform: status === 'entered' ? 'none' : 'translate3d(0, 16px, 0)',
+                transition: `opacity 0.8s var(--bezierFastoutSlowin) 600ms, transform 0.8s var(--bezierFastoutSlowin) 600ms`,
+              }}
+            >
+              <div style={{ fontWeight: 'var(--fontWeightBold)', color: 'var(--primary)', marginBottom: 'var(--spaceS)', fontSize: 'var(--fontSizeBodyS)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                Areas of Interest &amp; Collaboration:
+              </div>
+              <ul style={{ margin: 0, paddingLeft: 'var(--spaceL)', color: 'var(--textBody)', fontSize: 'var(--fontSizeBodyS)', lineHeight: '1.6' }}>
+                {interests.map(item => (
+                  <li key={item} style={{ marginBottom: 'var(--spaceXS)' }}>{item}</li>
+                ))}
+              </ul>
+            </div>
+
+            {/* 5. Final Closing Note */}
+            <div
+              style={{
+                marginTop: 'var(--spaceXL)',
+                textAlign: 'center',
+                opacity: status === 'entered' ? 1 : 0,
+                transition: `opacity 0.8s var(--bezierFastoutSlowin) 700ms`,
+              }}
+            >
+              <Text size="s" style={{ color: 'var(--textBody)' }}>
+                Have a project, idea, or opportunity to discuss? Let&apos;s connect.
+              </Text>
+            </div>
           </Form>
         )}
       </Transition>
+
       <Transition unmount in={actionData?.success}>
         {({ status, nodeRef }) => (
           <div className={styles.complete} aria-live="polite" ref={nodeRef}>
@@ -215,7 +326,7 @@ export const Contact = () => {
               data-status={status}
               style={getDelay(tokens.base.durationXS)}
             >
-              I’ll get back to you within a couple days, sit tight
+              Thank you for reaching out. I’ll get back to you promptly.
             </Text>
             <Button
               secondary

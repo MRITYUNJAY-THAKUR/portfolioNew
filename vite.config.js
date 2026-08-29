@@ -18,6 +18,7 @@ export default defineConfig({
   },
   server: {
     port: 7777,
+    host: true,
   },
   plugins: [
     mdx({
@@ -30,6 +31,12 @@ export default defineConfig({
       routes(defineRoutes) {
         return defineRoutes(route => {
           route('/', 'routes/home/route.js', { index: true });
+          route('/about', 'routes/about/route.js');
+          route('/skills', 'routes/skills/route.js');
+          route('/projects', 'routes/projects/route.js');
+          route('/certificates', 'routes/certificates/route.js');
+          route('/contact', 'routes/contact/route.js');
+          route('/api/set-theme', 'routes/api.set-theme.js');
         });
       },
     }),

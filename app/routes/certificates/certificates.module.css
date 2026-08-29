@@ -1,0 +1,116 @@
+.certificates {
+  --maxWidthL: 1000px;
+}
+
+.section {
+  padding-top: var(--space2XL);
+  padding-bottom: var(--space2XL);
+  margin-top: var(--space2XL);
+
+  + & {
+    margin-top: 0;
+  }
+}
+
+.certGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spaceL);
+  margin-top: var(--spaceL);
+}
+
+.certCard {
+  background: color-mix(in oklch, var(--backgroundLight) 80%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: var(--borderRadiusM);
+  padding: var(--spaceXL);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--spaceL);
+  transition: transform var(--durationM) var(--bezierFastoutSlowin),
+              border-color var(--durationM) ease,
+              box-shadow var(--durationM) ease;
+
+  &:hover {
+    transform: translateY(-6px);
+    border-color: var(--primary);
+    box-shadow: 0 12px 28px -10px color-mix(in lab, var(--primary) 25%, transparent);
+  }
+}
+
+.certTop {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spaceS);
+}
+
+.certIssuerBadge {
+  font-size: var(--fontSizeBodyXS);
+  font-weight: var(--fontWeightBold);
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.certTitle {
+  font-size: var(--fontSizeBodyL);
+  font-weight: var(--fontWeightBold);
+  color: var(--textTitle);
+  line-height: 1.3;
+}
+
+.certDate {
+  font-size: var(--fontSizeBodyS);
+  color: var(--textBody);
+}
+
+.learningAreasGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--spaceL);
+  margin-top: var(--spaceL);
+
+  @media (--mediaTablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.areaCard {
+  padding: var(--spaceL);
+  background: color-mix(in oklch, var(--backgroundLight) 80%, transparent);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: var(--borderRadiusM);
+  transition: transform var(--durationM) var(--bezierFastoutSlowin),
+              border-color var(--durationM) ease,
+              box-shadow var(--durationM) ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary);
+    box-shadow: 0 8px 20px -8px color-mix(in lab, var(--primary) 15%, transparent);
+  }
+}
+
+.areaTitle {
+  font-weight: var(--fontWeightBold);
+  color: var(--primary);
+  margin-bottom: var(--spaceXS);
+}
+
+.areaText {
+  font-size: var(--fontSizeBodyS);
+  color: var(--textBody);
+  line-height: var(--lineHeightBody);
+}
+
+.navLinks {
+  display: flex;
+  gap: var(--spaceM);
+  flex-wrap: wrap;
+  margin-top: var(--spaceL);
+}

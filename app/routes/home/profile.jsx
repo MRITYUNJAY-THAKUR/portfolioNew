@@ -18,19 +18,18 @@ import styles from './profile.module.css';
 const ProfileText = ({ visible, titleId }) => (
   <Fragment>
     <Heading className={styles.title} data-visible={visible} level={3} id={titleId}>
-      <DecoderText text="Hi there" start={visible} delay={500} />
+      <DecoderText text="About Me" start={visible} delay={500} />
     </Heading>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      I’m Hamish, currently I live in Sydney working as a senior product designer at{' '}
-      <Link href="https://www.qwilr.com">Qwilr</Link>. My projects include UX design, UI
-      animations, and icon illustration. Being comfortable with code allows me to rapidly
-      prototype and validate experiences. If you’re interested in the tools and software I
-      use check out my <Link href="/uses">uses page</Link>.
+      I’m Mrityunjay Thakur, a Computer Science &amp; Engineering student at{' '}
+      <Link href="https://www.lpu.in">Lovely Professional University</Link> with an active academic
+      record of <strong style={{ color: 'var(--primary)' }}>CGPA 9.60</strong>.
+      My journey centers around programming, problem solving, software development, and exploring
+      AI and emerging technologies.
     </Text>
     <Text className={styles.description} data-visible={visible} size="l" as="p">
-      In my spare time I like to practice Brazilian Jiu Jitsu, play video games, and{' '}
-      <Link href="/projects/volkihar-knight">make mods</Link>. I’m always down for hearing
-      about new projects, so feel free to drop me a line.
+      I actively practice algorithmic problem solving on LeetCode, develop practical software solutions
+      in Python, C/C++, and JavaScript, and have created educational content to help beginner programmers.
     </Text>
   </Fragment>
 );
@@ -55,15 +54,25 @@ export const Profile = ({ id, visible, sectionRef }) => {
           <div className={styles.content} ref={nodeRef}>
             <div className={styles.column}>
               <ProfileText visible={visible} titleId={titleId} />
-              <Button
-                secondary
-                className={styles.button}
-                data-visible={visible}
-                href="/contact"
-                icon="send"
-              >
-                Send me a message
-              </Button>
+              <div style={{ display: 'flex', gap: 'var(--spaceM)', flexWrap: 'wrap', marginTop: 'var(--spaceL)' }}>
+                <Button
+                  className={styles.button}
+                  data-visible={visible}
+                  href="/about"
+                  icon="arrow-right"
+                >
+                  View My Journey
+                </Button>
+                <Button
+                  secondary
+                  className={styles.button}
+                  data-visible={visible}
+                  href="/contact"
+                  icon="send"
+                >
+                  Send me a message
+                </Button>
+              </div>
             </div>
             <div className={styles.column}>
               <div className={styles.tag} aria-hidden>
@@ -86,7 +95,7 @@ export const Profile = ({ id, visible, sectionRef }) => {
                   width={960}
                   height={1280}
                   sizes={`(max-width: ${media.mobile}px) 100vw, 480px`}
-                  alt="Me smiling like a goofball at the Qwilr office in Sydney"
+                  alt="Portrait of Mrityunjay Thakur"
                 />
                 <svg className={styles.svg} data-visible={visible} viewBox="0 0 136 766">
                   <use href={`${katakana}#katakana-profile`} />

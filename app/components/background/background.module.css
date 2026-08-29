@@ -1,0 +1,164 @@
+@layer layout {
+  .background {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: var(--zIndex0);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .gradientBase {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      circle at 50% 20%,
+      color-mix(in oklch, var(--backgroundLight) 50%, var(--background)) 0%,
+      var(--background) 100%
+    );
+  }
+
+  .orbPrimary {
+    position: absolute;
+    top: -10vw;
+    right: -10vw;
+    width: 60vw;
+    height: 60vw;
+    min-width: 400px;
+    min-height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      color-mix(in oklch, var(--primary) 16%, transparent) 0%,
+      color-mix(in oklch, var(--primary) 6%, transparent) 40%,
+      transparent 70%
+    );
+    filter: blur(60px);
+    will-change: transform;
+    animation: driftPrimary 24s ease-in-out infinite alternate;
+
+    @media (--mediaReduceMotion) {
+      animation: none;
+    }
+  }
+
+  .orbSecondary {
+    position: absolute;
+    bottom: -15vw;
+    left: -10vw;
+    width: 55vw;
+    height: 55vw;
+    min-width: 350px;
+    min-height: 350px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      color-mix(in oklch, #6366f1 14%, transparent) 0%,
+      color-mix(in oklch, var(--primary) 5%, transparent) 45%,
+      transparent 70%
+    );
+    filter: blur(70px);
+    will-change: transform;
+    animation: driftSecondary 28s ease-in-out infinite alternate;
+
+    @media (--mediaReduceMotion) {
+      animation: none;
+    }
+  }
+
+  .orbCenter {
+    position: absolute;
+    top: 40%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    width: 70vw;
+    height: 50vw;
+    border-radius: 50%;
+    background: radial-gradient(
+      ellipse,
+      color-mix(in oklch, var(--primary) 8%, transparent) 0%,
+      transparent 65%
+    );
+    filter: blur(80px);
+    will-change: transform, opacity;
+    animation: pulseCenter 20s ease-in-out infinite alternate;
+
+    @media (--mediaReduceMotion) {
+      animation: none;
+    }
+  }
+
+  .interactiveGlow {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      color-mix(in oklch, var(--primary) 12%, transparent) 0%,
+      transparent 70%
+    );
+    filter: blur(50px);
+    transform: translate(-50%, -50%);
+    transition: opacity var(--durationL) ease;
+    opacity: 0;
+    will-change: transform, opacity;
+
+    &[data-active='true'] {
+      opacity: 1;
+    }
+
+    @media (--mediaReduceMotion), (--mediaTouch) {
+      display: none;
+    }
+  }
+
+  .noiseLayer {
+    position: absolute;
+    inset: 0;
+    opacity: 0.025;
+    background-image: radial-gradient(var(--text) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  @keyframes driftPrimary {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(-5vw, 6vh, 0) scale(1.08);
+    }
+    100% {
+      transform: translate3d(-2vw, 12vh, 0) scale(0.95);
+    }
+  }
+
+  @keyframes driftSecondary {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    50% {
+      transform: translate3d(8vw, -8vh, 0) scale(1.12);
+    }
+    100% {
+      transform: translate3d(4vw, -4vh, 0) scale(0.92);
+    }
+  }
+
+  @keyframes pulseCenter {
+    0% {
+      opacity: 0.5;
+      transform: translate(-50%, -50%) scale(0.95);
+    }
+    50% {
+      opacity: 0.85;
+      transform: translate(-48%, -52%) scale(1.06);
+    }
+    100% {
+      opacity: 0.6;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+}

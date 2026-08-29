@@ -1,16 +1,21 @@
-import gamestackTexture2Large from '~/assets/gamestack-list-large.jpg';
-import gamestackTexture2Placeholder from '~/assets/gamestack-list-placeholder.jpg';
-import gamestackTexture2 from '~/assets/gamestack-list.jpg';
-import gamestackTextureLarge from '~/assets/gamestack-login-large.jpg';
-import gamestackTexturePlaceholder from '~/assets/gamestack-login-placeholder.jpg';
-import gamestackTexture from '~/assets/gamestack-login.jpg';
-import sliceTextureLarge from '~/assets/slice-app-large.jpg';
-import sliceTexturePlaceholder from '~/assets/slice-app-placeholder.jpg';
-import sliceTexture from '~/assets/slice-app.jpg';
-import sprTextureLarge from '~/assets/spr-lesson-builder-dark-large.jpg';
-import sprTexturePlaceholder from '~/assets/spr-lesson-builder-dark-placeholder.jpg';
-import sprTexture from '~/assets/spr-lesson-builder-dark.jpg';
+import diceTextureLarge from '~/assets/dice-game-large.jpg';
+import diceTexturePlaceholder from '~/assets/dice-game-placeholder.jpg';
+import diceTexture from '~/assets/dice-game.jpg';
+import goiTexture2Large from '~/assets/goi-clone-2-large.jpg';
+import goiTexture2Placeholder from '~/assets/goi-clone-2-placeholder.jpg';
+import goiTexture2 from '~/assets/goi-clone-2.jpg';
+import goiTextureLarge from '~/assets/goi-clone-1-large.jpg';
+import goiTexturePlaceholder from '~/assets/goi-clone-1-placeholder.jpg';
+import goiTexture from '~/assets/goi-clone-1.jpg';
+import iotTextureLarge from '~/assets/iot-food-large.jpg';
+import iotTexturePlaceholder from '~/assets/iot-food-placeholder.jpg';
+import iotTexture from '~/assets/iot-food.jpg';
+import { Button } from '~/components/button';
+import { DecoderText } from '~/components/decoder-text';
 import { Footer } from '~/components/footer';
+import { Heading } from '~/components/heading';
+import { Reveal, RevealItem } from '~/components/reveal';
+import { Text } from '~/components/text';
 import { baseMeta } from '~/utils/meta';
 import { Intro } from './intro';
 import { Profile } from './profile';
@@ -19,7 +24,6 @@ import { useEffect, useRef, useState } from 'react';
 import config from '~/config.json';
 import styles from './home.module.css';
 
-// Prefetch draco decoader wasm
 export const links = () => {
   return [
     {
@@ -41,22 +45,38 @@ export const links = () => {
 
 export const meta = () => {
   return baseMeta({
-    title: 'Designer + Developer',
-    description: `Design portfolio of ${config.name} — a product designer working on web & mobile apps with a focus on motion, experience design, and accessibility.`,
+    title: 'Computer Science & Engineering Student',
+    description: `Personal developer portfolio of ${config.name} — Computer Science & Engineering student at Lovely Professional University focused on programming, problem solving, software development, and AI.`,
   });
 };
+
+const stats = [
+  { value: '9.60', label: 'CGPA Record', sub: 'Lovely Professional University' },
+  { value: 'B.Tech', label: 'CSE Student', sub: 'Computer Science & Engineering' },
+  { value: '10', label: 'Python Videos', sub: 'Educational Concept Guides' },
+  { value: '3', label: 'Certifications', sub: 'Infosys Verified Credentials' },
+];
+
+const techOverview = [
+  { category: 'Programming', items: 'C, C++, Python, JavaScript, HTML, CSS' },
+  { category: 'Libraries', items: 'NumPy' },
+  { category: 'Databases', items: 'MySQL, PostgreSQL' },
+  { category: 'Tools', items: 'Git, GitHub, VS Code, Jupyter Notebook' },
+];
 
 export const Home = () => {
   const [visibleSections, setVisibleSections] = useState([]);
   const [scrollIndicatorHidden, setScrollIndicatorHidden] = useState(false);
   const intro = useRef();
+  const highlights = useRef();
   const projectOne = useRef();
   const projectTwo = useRef();
   const projectThree = useRef();
   const details = useRef();
+  const cta = useRef();
 
   useEffect(() => {
-    const sections = [intro, projectOne, projectTwo, projectThree, details];
+    const sections = [intro, highlights, projectOne, projectTwo, projectThree, details, cta];
 
     const sectionObserver = new IntersectionObserver(
       (entries, observer) => {
@@ -80,10 +100,10 @@ export const Home = () => {
     );
 
     sections.forEach(section => {
-      sectionObserver.observe(section.current);
+      if (section.current) sectionObserver.observe(section.current);
     });
 
-    indicatorObserver.observe(intro.current);
+    if (intro.current) indicatorObserver.observe(intro.current);
 
     return () => {
       sectionObserver.disconnect();
@@ -93,27 +113,90 @@ export const Home = () => {
 
   return (
     <div className={styles.home}>
+      {/* 1. Hero with 3D DisplacementSphere */}
       <Intro
         id="intro"
         sectionRef={intro}
         scrollIndicatorHidden={scrollIndicatorHidden}
       />
+
+      {/* 2 & 3 & 4. Short Intro, Highlights, & What I Work With */}
+      <section className={styles.introSection} ref={highlights} id="highlights">
+        <div className={styles.introContainer}>
+          <Reveal animation="fade-up" visible={visibleSections.includes(highlights.current)}>
+            <div className={styles.introText}>
+              <Heading level={3} as="h2" style={{ marginBottom: 'var(--spaceS)' }}>
+                <DecoderText text="Overview &amp; Highlights" start={visibleSections.includes(highlights.current)} delay={300} />
+              </Heading>
+              <p className={styles.introDescription}>
+                I am a Computer Science and Engineering student at Lovely Professional University focused on
+                programming, problem solving, software development, AI, and emerging technologies.
+              </p>
+            </div>
+          </Reveal>
+
+          {/* Stat Cards with Staggered Entrance */}
+          <div className={styles.statsGrid}>
+            {stats.map((stat, index) => (
+              <RevealItem
+                key={stat.label}
+                index={index}
+                stagger={80}
+                visible={visibleSections.includes(highlights.current)}
+                className={styles.statCard}
+              >
+                <span className={styles.statValue}>{stat.value}</span>
+                <span className={styles.statLabel}>{stat.label}</span>
+                <span className={styles.statSub}>{stat.sub}</span>
+              </RevealItem>
+            ))}
+          </div>
+
+          {/* What I Work With */}
+          <div className={styles.techOverview}>
+            <Reveal animation="fade-up" visible={visibleSections.includes(highlights.current)}>
+              <Heading level={4} as="h3" style={{ marginBottom: 'var(--spaceS)' }}>
+                What I Work With
+              </Heading>
+              <p style={{ color: 'var(--textBody)', fontSize: 'var(--fontSizeBodyM)' }}>
+                Core technologies and tools applied across academic practice, algorithms, and software builds.
+              </p>
+            </Reveal>
+            <div className={styles.techGrid}>
+              {techOverview.map((tech, index) => (
+                <RevealItem
+                  key={tech.category}
+                  index={index}
+                  stagger={80}
+                  visible={visibleSections.includes(highlights.current)}
+                  className={styles.techCard}
+                >
+                  <div className={styles.techCategory}>{tech.category}</div>
+                  <div className={styles.techItems}>{tech.items}</div>
+                </RevealItem>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Featured Projects with 3D Laptop/Phone Canvas */}
       <ProjectSummary
         id="project-1"
         sectionRef={projectOne}
         visible={visibleSections.includes(projectOne.current)}
         index={1}
-        title="Designing the future of education"
-        description="Designing a platform to help educators build better online courseware"
-        buttonText="View project"
-        buttonLink="/projects/smart-sparrow"
+        title="Interactive Dice Roll Game"
+        description="Developed a multiplayer game in Python featuring turn management, player input, score tracking, and conditional logic. Tested across 100+ simulated rounds."
+        buttonText="View Project"
+        buttonLink="/projects"
         model={{
           type: 'laptop',
-          alt: 'Smart Sparrow lesson builder',
+          alt: 'Python Multiplayer Dice Roll Game interface and simulation log',
           textures: [
             {
-              srcSet: `${sprTexture} 1280w, ${sprTextureLarge} 2560w`,
-              placeholder: sprTexturePlaceholder,
+              srcSet: `${diceTexture} 1280w, ${diceTextureLarge} 2560w`,
+              placeholder: diceTexturePlaceholder,
             },
           ],
         }}
@@ -124,21 +207,21 @@ export const Home = () => {
         sectionRef={projectTwo}
         visible={visibleSections.includes(projectTwo.current)}
         index={2}
-        title="Video game progress tracking"
-        description="Design and development for a video game tracking app built in React Native"
-        buttonText="View website"
-        buttonLink="https://gamestack.hamishw.com"
+        title="Government Website Clone"
+        description="A responsive educational website clone developed with HTML, CSS, and JavaScript focusing on structured layouts, accessibility, forms, and intuitive navigation."
+        buttonText="View Project"
+        buttonLink="/projects"
         model={{
           type: 'phone',
-          alt: 'App login screen',
+          alt: 'Government of India educational website clone interface (HTML/CSS/JavaScript)',
           textures: [
             {
-              srcSet: `${gamestackTexture} 375w, ${gamestackTextureLarge} 750w`,
-              placeholder: gamestackTexturePlaceholder,
+              srcSet: `${goiTexture} 375w, ${goiTextureLarge} 750w`,
+              placeholder: goiTexturePlaceholder,
             },
             {
-              srcSet: `${gamestackTexture2} 375w, ${gamestackTexture2Large} 750w`,
-              placeholder: gamestackTexture2Placeholder,
+              srcSet: `${goiTexture2} 375w, ${goiTexture2Large} 750w`,
+              placeholder: goiTexture2Placeholder,
             },
           ],
         }}
@@ -148,26 +231,61 @@ export const Home = () => {
         sectionRef={projectThree}
         visible={visibleSections.includes(projectThree.current)}
         index={3}
-        title="Biomedical image collaboration"
-        description="Increasing the amount of collaboration in Slice, an app for biomedical imaging"
-        buttonText="View project"
-        buttonLink="/projects/slice"
+        title="IoT Food Contamination Detection"
+        description="Hardware and software integrated IoT solution designed for automated real-time food contamination detection and telemetry monitoring."
+        buttonText="View Project"
+        buttonLink="/projects"
         model={{
           type: 'laptop',
-          alt: 'Annotating a biomedical image in the Slice app',
+          alt: 'IoT-Based Food Contamination Detection System telemetry and monitoring dashboard',
           textures: [
             {
-              srcSet: `${sliceTexture} 800w, ${sliceTextureLarge} 1920w`,
-              placeholder: sliceTexturePlaceholder,
+              srcSet: `${iotTexture} 1280w, ${iotTextureLarge} 2560w`,
+              placeholder: iotTexturePlaceholder,
             },
           ],
         }}
       />
+
+      {/* View All Projects Action */}
+      <Reveal animation="fade-up">
+        <div className={styles.projectsAction}>
+          <Button href="/projects" icon="arrow-right">
+            View All Projects
+          </Button>
+        </div>
+      </Reveal>
+
+      {/* 6. Profile & Education Preview */}
       <Profile
         sectionRef={details}
         visible={visibleSections.includes(details.current)}
         id="details"
       />
+
+      {/* 7. Final Home CTA */}
+      <section className={styles.finalCta} ref={cta} id="home-cta">
+        <Reveal animation="fade-up" visible={visibleSections.includes(cta.current)}>
+          <div className={styles.finalCtaContent}>
+            <Heading level={3} as="h2">
+              <DecoderText text="Interested in what I build?" start={visibleSections.includes(cta.current)} delay={300} />
+            </Heading>
+            <Text size="l" style={{ color: 'var(--textBody)' }}>
+              Explore my projects, technical skills, and ongoing software development work.
+            </Text>
+            <div className={styles.finalCtaActions}>
+              <Button href="/projects" icon="arrow-right">
+                Explore Projects
+              </Button>
+              <Button secondary href="/contact" icon="send">
+                Contact Me
+              </Button>
+            </div>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* 8. Footer */}
       <Footer />
     </div>
   );

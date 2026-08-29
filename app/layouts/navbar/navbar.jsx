@@ -114,13 +114,19 @@ export const Navbar = () => {
 
   // Check if a nav item should be active
   const getCurrent = (url = '') => {
-    const nonTrailing = current?.endsWith('/') ? current?.slice(0, -1) : current;
+    const path = location.pathname.endsWith('/') && location.pathname !== '/'
+      ? location.pathname.slice(0, -1)
+      : location.pathname;
 
-    if (url === nonTrailing) {
+    if (url === '/' && path === '/') {
       return 'page';
     }
 
-    return '';
+    if (url !== '/' && (path === url || path.startsWith(`${url}/`))) {
+      return 'page';
+    }
+
+    return undefined;
   };
 
   // Store the current hash to scroll to
