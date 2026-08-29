@@ -1,5 +1,5 @@
 import { createRequestHandler } from '@remix-run/node';
-import * as build from '../build/server/nodejs-eyJydW50aW1lIjoibm9kZWpzIn0/index.js';
+import * as build from '../build/server/index.js';
 
 async function testRoutes() {
   const handler = createRequestHandler(build, 'production');
